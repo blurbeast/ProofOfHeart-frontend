@@ -71,7 +71,7 @@ export default function AdminDashboard() {
   const [campaignToReject, setCampaignToReject] = useState<Campaign | null>(null);
 
   // Optimistic UI State
-  const [optimisticRemovedIds, setOptimisticRemovedIds] = useState<number[]>([]);
+  const [optimisticPendingIds, setOptimisticPendingIds] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     let cancelled = false;
@@ -98,15 +98,27 @@ export default function AdminDashboard() {
 
   // Reconcile optimistic updates when raw data changes
   useEffect(() => {
-    if (optimisticRemovedIds.length === 0) return;
+    if (optimisticPendingIds.size === 0) return;
     
-    // Remove IDs from optimistic list if they are no longer in the "actually pending" server data
-    setOptimisticRemovedIds(prev => prev.filter(id => {
-      const isStillInServerData = campaigns.some(c => 
-        c.id === id && !c.is_verified && c.is_active && !c.is_cancelled
-      );
-      return isStillInServerData;
-    }));
+    setOptimisticPendingIds((prev) => {
+      const next = new Set(prev);
+      let changed = false;
+
+      for (const id of next) {
+        // If it is no longer pending on the server (either verified, inactive, or cancelled),
+        // we can safely remove it from our optimistic hidden set.
+        const isStillInServerData = campaigns.some(
+          (c) => c.id === id && !c.is_verified && c.is_active && !c.is_cancelled
+        );
+
+        if (!isStillInServerData) {
+          next.delete(id);
+          changed = true;
+        }
+      }
+
+      return changed ? next : prev;
+    });
   }, [campaigns]);
 
   const isAdmin = useMemo(() => {
@@ -127,9 +139,9 @@ export default function AdminDashboard() {
         !c.is_verified &&
         c.is_active &&
         !c.is_cancelled &&
-        !optimisticRemovedIds.includes(c.id),
+        !optimisticPendingIds.has(c.id),
     );
-  }, [campaigns, optimisticRemovedIds]);
+  }, [campaigns, optimisticPendingIds]);
 
   const totalRaised = useMemo(() => {
     return campaigns.reduce((sum, c) => sum + BigInt(c.amount_raised), BigInt(0));
@@ -154,7 +166,7 @@ export default function AdminDashboard() {
         refreshAuditLog(publicKey);
       }
       showSuccess("Campaign approved successfully!");
-      setOptimisticRemovedIds((prev) => [...prev, id]);
+      setOptimisticPendingIds((prev) => new Set(prev).add(id));
       refetch();
     } catch (err) {
       showError(parseContractError(err));
@@ -170,7 +182,8 @@ export default function AdminDashboard() {
 
   const handleConfirmReject = async () => {
     if (!campaignToReject) return;
-    setCancellingId(campaignToReject.id);
+    const id = campaignToReject.id;
+    setCancellingId(id);
     try {
       const txHash = await cancelCampaign(id);
       if (publicKey) {
@@ -183,9 +196,8 @@ export default function AdminDashboard() {
         });
         refreshAuditLog(publicKey);
       }
-      await cancelCampaign(campaignToReject.id);
       showSuccess("Campaign rejected and cancelled.");
-      setOptimisticRemovedIds((prev) => [...prev, campaignToReject.id]);
+      setOptimisticPendingIds((prev) => new Set(prev).add(id));
       setIsRejectModalOpen(false);
       refetch();
     } catch (err) {
