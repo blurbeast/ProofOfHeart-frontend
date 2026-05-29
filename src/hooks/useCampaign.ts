@@ -9,6 +9,7 @@ export interface UseCampaignResult {
   campaign: Campaign | null;
   isLoading: boolean;
   error: string | null;
+  notFound: boolean;
   refetch: () => void;
 }
 
@@ -34,6 +35,7 @@ export function useCampaign(id: number): UseCampaignResult {
     campaign: data ?? null,
     isLoading,
     error: error?.message ?? null,
+    notFound: !isLoading && !error && data === null && !!id,
     refetch: () => {
       queryClient.invalidateQueries({ queryKey: ['campaign', id] });
     },
