@@ -23,6 +23,7 @@ interface FunnelEventData {
   campaignId?: string; // Hashed or anonymized campaign ID
   errorType?: string; // Generic error category, no sensitive details
   timestamp?: number;
+  [key: string]: unknown;
 }
 
 /**

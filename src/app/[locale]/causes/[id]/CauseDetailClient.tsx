@@ -19,6 +19,8 @@ import { useWallet } from '@/components/WalletContext';
 import { useCampaign } from '@/hooks/useCampaign';
 import { useLiveVoteTallies } from '@/hooks/useLiveVoteTallies';
 import { usePlatformFee } from '@/hooks/usePlatformFee';
+import { useLiveCampaignFunding } from '@/hooks/useLiveCampaignFunding';
+import SafeMarkdown from '@/components/SafeMarkdown';
 import {
   voteOnCampaign,
   hasVoted,
@@ -280,7 +282,7 @@ export default function CauseDetailClient({ id }: { id: string }) {
   const isRefundEligible =
     campaign.is_cancelled ||
     (now > campaign.deadline && campaign.amount_raised < campaign.funding_goal);
-  const refundableXlm = formatStroopsAsXlm(refundableAmount, { maximumFractionDigits: 7 });
+  const refundableXlm = parseFloat(formatStroopsAsXlm(refundableAmount, { maximumFractionDigits: 7 })) || 0;
 
   return (
     <div className="min-h-screen bg-linear-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-800">

@@ -3,14 +3,14 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Campaign, Vote, CATEGORY_LABELS, calculateFundingPercentage, formatStroopsAsXlm } from '../types';
-import { formatAddress } from '@/lib/formatAddress';
 import AsyncButtonContent from './AsyncButtonContent';
 import CampaignStatusBadge from './CampaignStatusBadge';
 import CancelCampaignModal from './cancelCampaignModal';
 import DeadlineCountdown from './DeadlineCountdown';
 import FundingProgressBar from './FundingProgressBar';
-import VotingComponent from './VotingComponent';
 import { useToast } from './ToastProvider';
+import VotingComponent from './VotingComponent';
+import { formatAddress } from '@/lib/formatAddress';
 import { getAsyncActionErrorMessage, withActionTimeout } from '@/utils/asyncAction';
 import { parseContractError } from '@/utils/contractErrors';
 
@@ -162,7 +162,7 @@ export default function CauseCard({
         {/* Funding progress */}
         <div className="space-y-1.5">
           <div className="flex justify-between text-xs text-zinc-500 dark:text-zinc-400">
-            <span>{raisedXlm.toLocaleString(undefined, { maximumFractionDigits: 2 })} XLM raised</span>
+            <span>{raisedXlm} XLM raised</span>
             <span>{progressPct}%</span>
           </div>
           <div className="w-full bg-zinc-100 dark:bg-zinc-700 rounded-full h-1.5">
@@ -172,7 +172,7 @@ export default function CauseCard({
             />
           </div>
           <p className="text-xs text-zinc-400 dark:text-zinc-500">
-            Goal: {goalXlm.toLocaleString(undefined, { maximumFractionDigits: 2 })} XLM
+            Goal: {goalXlm} XLM
           </p>
         </div>
 
