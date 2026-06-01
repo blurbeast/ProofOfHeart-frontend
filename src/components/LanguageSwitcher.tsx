@@ -5,6 +5,7 @@ import { useLocale } from "next-intl";
 import { useMemo, useTransition } from "react";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
+import { writeLocalePreference } from "@/lib/preferences";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
@@ -28,6 +29,8 @@ export default function LanguageSwitcher() {
     if (nextLocale === locale) {
       return;
     }
+
+    writeLocalePreference(nextLocale);
 
     startTransition(() => {
       router.replace(pathname, { locale: nextLocale });
