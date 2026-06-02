@@ -399,6 +399,7 @@
     "votedDownvote": "Votaste para rechazar esta causa",
     "verifyWithVotes": "✓ Verificar Campaña con Votos",
     "verifying": "Verificando..."
+  },
   "Observability": {
     "loading": "Cargando métricas de observabilidad…",
     "metricsRequestFailed": "Error al solicitar métricas ({status})",
@@ -416,5 +417,11 @@
     "noContractErrors": "No hay errores de contrato en la ventana actual.",
     "recentEvents": "Eventos recientes",
     "noRecentEvents": "Aún no hay eventos recientes registrados."
+  },
+  "CauseJsonLd": {
+    "donateActionName": "Apoya {title}",
+    "fundingGoalLabel": "Meta de financiamiento",
+    "amountRaisedLabel": "Monto recaudado",
+    "deadlineLabel": "Fecha límite de financiamiento"
   }
 }
