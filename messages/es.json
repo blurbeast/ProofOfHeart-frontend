@@ -229,8 +229,10 @@
     "processingVote": "Procesando voto…",
     "noCausesYet": "Aún no hay causas",
     "noCausesFound": "No se encontraron causas",
+    "noSearchResults": "No hay resultados de búsqueda",
     "beFirstToSubmit": "Sé el primero en enviar una causa para que la comunidad vote.",
     "tryDifferentKeyword": "Intenta con otra palabra clave o borra los filtros.",
+    "tryDifferentSearch": "Intenta con otros términos de búsqueda o borra los filtros para ver todas las causas.",
     "tryAgain": "Intentar de nuevo",
     "loadMore": "Cargar más causas",
     "showingRange": "Mostrando {shown} de {total}"
@@ -399,6 +401,7 @@
     "votedDownvote": "Votaste para rechazar esta causa",
     "verifyWithVotes": "✓ Verificar Campaña con Votos",
     "verifying": "Verificando..."
+  },
   "Observability": {
     "loading": "Cargando métricas de observabilidad…",
     "metricsRequestFailed": "Error al solicitar métricas ({status})",

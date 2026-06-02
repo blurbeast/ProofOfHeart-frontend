@@ -261,6 +261,8 @@ export default function CauseDetailClient({ id }: { id: string }) {
     campaign.is_cancelled ||
     (now > campaign.deadline && campaign.amount_raised < campaign.funding_goal);
 
+  const refundableXlm = parseFloat(Number(stroopsToXlm(refundableAmount)).toString()) || 0;
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-800">
