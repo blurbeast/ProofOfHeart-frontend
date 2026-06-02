@@ -31,6 +31,12 @@ const CATEGORY_ICONS: Record<Category, string> = {
   [Category.Publisher]: "📚",
 };
 
+const CATEGORY_VALUES = Object.values(Category).filter(
+  (value): value is Category => typeof value === "number",
+);
+
+type CategoryFilter = "all" | Category;
+
 function useDebounce<T>(value: T, delay: number): T {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -248,6 +254,47 @@ function CausesContent() {
     setTag(nextTag);
   }, []);
 
+  const campaignsMatchingNonCategoryFilters = useMemo(() => {
+    let result = [...campaigns];
+
+    if (debouncedSearch.trim()) {
+      const q = debouncedSearch.toLowerCase();
+      result = result.filter(
+        (c) =>
+          c.title.toLowerCase().includes(q) ||
+          c.description.toLowerCase().includes(q) ||
+          (CATEGORY_LABELS[c.category] ?? "").toLowerCase().includes(q) ||
+          c.tags?.some((t) => t.toLowerCase().includes(q)),
+      );
+    }
+
+    if (status !== "all") result = result.filter((c) => c.status === status);
+    if (tag) result = result.filter((c) => c.tags?.includes(tag));
+
+    return result;
+  }, [campaigns, debouncedSearch, status, tag]);
+
+  const categoryCounts = useMemo(() => {
+    const perCategory = Object.fromEntries(
+      CATEGORY_VALUES.map((cat) => [cat, 0]),
+    ) as Record<Category, number>;
+
+    for (const campaign of campaignsMatchingNonCategoryFilters) {
+      perCategory[campaign.category] += 1;
+    }
+
+    return {
+      all: campaignsMatchingNonCategoryFilters.length,
+      ...perCategory,
+    };
+  }, [campaignsMatchingNonCategoryFilters]);
+
+  const isCategorySelected = useCallback(
+    (cat: CategoryFilter) =>
+      cat === "all" ? category === "all" : category === String(cat),
+    [category],
+  );
+
   // -------------------------------------------------------------------------
   // Filtering + sorting
   // -------------------------------------------------------------------------
@@ -344,7 +391,7 @@ function CausesContent() {
               </span>
               <button
                 onClick={() => setTag("")}
-                className="ml-1 text-blue-400 hover:text-blue-600 dark:hover:text-blue-200 transition-colors"
+                className="ms-1 text-blue-400 hover:text-blue-600 dark:hover:text-blue-200 transition-colors"
                 aria-label="Clear tag filter"
               >
                 ✕
@@ -358,7 +405,7 @@ function CausesContent() {
           {/* Search */}
           <div className="relative" role="search">
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400"
+              className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -392,26 +439,59 @@ function CausesContent() {
             )}
           </div>
 
-          {/* Filter row */}
-          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:items-center">
-            <div className="flex items-center gap-2">
-              <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap w-16 sm:w-auto">
-                {t("labelCategory")}
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="flex-1 sm:flex-none text-sm rounded-lg border border-zinc-200 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">{t("allCategories")}</option>
-                {Object.entries(CATEGORY_LABELS).map(([val, label]) => (
-                  <option key={val} value={val}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {/* Category filter chips */}
+          {!isLoading && !error && (
+            <div
+              role="group"
+              aria-label={t("labelCategory")}
+              className="flex flex-wrap gap-2"
+            >
+              {(["all", ...CATEGORY_VALUES] as CategoryFilter[]).map((cat) => {
+                const selected = isCategorySelected(cat);
+                const count =
+                  cat === "all" ? categoryCounts.all : categoryCounts[cat as Category];
+                const label =
+                  cat === "all"
+                    ? t("allCategories")
+                    : `${CATEGORY_ICONS[cat]} ${CATEGORY_LABELS[cat]}`;
+                const accessibleName =
+                  cat === "all" ? t("allCategories") : CATEGORY_LABELS[cat as Category];
 
+                return (
+                  <button
+                    key={String(cat)}
+                    type="button"
+                    aria-pressed={selected}
+                    aria-label={t(
+                      selected ? "categoryChipAriaSelected" : "categoryChipAriaUnselected",
+                      { label: accessibleName, count },
+                    )}
+                    onClick={() => setCategory(cat === "all" ? "all" : String(cat))}
+                    className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-800 ${
+                      selected
+                        ? "bg-blue-600 text-white"
+                        : "bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-600"
+                    }`}
+                  >
+                    <span aria-hidden="true">{label}</span>
+                    <span
+                      className={`tabular-nums text-xs font-semibold px-1.5 py-0.5 rounded-full ${
+                        selected
+                          ? "bg-blue-500 text-white"
+                          : "bg-zinc-200 dark:bg-zinc-600 text-zinc-600 dark:text-zinc-300"
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Filter row */}
+          <div className="flex flex-wrap gap-3 items-center">
             <div className="flex items-center gap-2">
               <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap w-16 sm:w-auto">
                 {t("labelStatus")}
@@ -449,39 +529,13 @@ function CausesContent() {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="text-xs text-blue-600 dark:text-blue-400 hover:underline sm:ml-auto min-h-[44px] sm:min-h-0 px-2"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:underline ms-auto"
               >
                 {t("clearFilters")}
               </button>
             )}
           </div>
         </div>
-
-        {/* Category pills */}
-        {!isLoading && !error && (
-          <div className="flex flex-wrap gap-2 mb-6">
-            {(
-              ["all", ...Object.values(Category).filter((v) => typeof v === "number")] as (
-                | "all"
-                | Category
-              )[]
-            ).map((cat) => (
-              <button
-                key={String(cat)}
-                onClick={() => setCategory(cat === "all" ? "all" : String(cat))}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                  (cat === "all" ? category === "all" : category === String(cat))
-                    ? "bg-blue-600 text-white"
-                    : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                }`}
-              >
-                {cat === "all"
-                  ? t("all")
-                  : `${CATEGORY_ICONS[cat as Category]} ${CATEGORY_LABELS[cat as Category]}`}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Error state */}
         {error && (
