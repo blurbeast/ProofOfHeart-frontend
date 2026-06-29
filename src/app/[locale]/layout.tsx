@@ -18,6 +18,8 @@ import { getThemeBlockingScript } from "@/lib/preferences";
 import type { Metadata } from "next";
 import "../globals.css";
 
+
+
 // #138 — Pre-render locale shells at build time so /en and /es appear in the
 // static-pages section of the build output instead of being dynamic routes.
 export function generateStaticParams() {
