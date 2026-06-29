@@ -82,6 +82,30 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
+
+            <div>
+              <h2 className="text-sm font-semibold text-zinc-950 dark:text-zinc-50">
+                Legal
+              </h2>
+              <ul className="mt-3 space-y-2 text-sm">
+                <li>
+                  <Link
+                    href="/terms"
+                    className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/privacy"
+                    className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
