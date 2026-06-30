@@ -9,10 +9,7 @@ import { stroopsToXlmNumber } from "../lib/stellarAmount";
 import { useToast } from "./ToastProvider";
 import { parseContractError } from "../utils/contractErrors";
 import { Download } from "lucide-react";
-import type { WalletTransactionAction } from "../lib/transactionLog";
-import { type TransactionLifecyclePhase } from "../lib/contractClient";
 import type { ContributionHistoryItem } from "../hooks/useContributions";
-import { useTranslations } from "next-intl";
 
 interface MyContributionsSectionProps {
   walletAddress: string;

@@ -10,10 +10,6 @@ const RevenueSharingPanel = dynamic(() => import("@/components/RevenueSharingPan
   ssr: false,
 });
 const DonationModal = dynamic(() => import("@/components/DonationModal"), { ssr: false });
-const RevenueSharingPanel = dynamic(() => import("@/components/RevenueSharingPanel"), {
-  ssr: false,
-});
-import UpdatesSection from "@/components/UpdatesSection";
 import CampaignStatusBadge from "@/components/CampaignStatusBadge";
 import DeadlineCountdown from "@/components/DeadlineCountdown";
 import FundingProgressBar from "@/components/FundingProgressBar";
