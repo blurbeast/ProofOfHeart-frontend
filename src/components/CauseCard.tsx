@@ -7,12 +7,7 @@ import { formatAddress } from "@/lib/formatAddress";
 import { formatShortDate } from "@/lib/formatters";
 import { getAsyncActionErrorMessage, withActionTimeout } from "@/utils/asyncAction";
 import { parseContractError } from "@/utils/contractErrors";
-import {
-  Campaign,
-  Vote,
-  CATEGORY_LABELS,
-  calculateFundingPercentage,
-} from "../types";
+import { Campaign, Vote, CATEGORY_LABELS, calculateFundingPercentage } from "../types";
 import Amount from "./Amount";
 import AsyncButtonContent from "./AsyncButtonContent";
 import CampaignStatusBadge from "./CampaignStatusBadge";

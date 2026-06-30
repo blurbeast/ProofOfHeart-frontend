@@ -45,9 +45,7 @@ export default function ContributorLeaderboard({ campaignId }: ContributorLeader
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700 p-6">
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-4">
-        Top Supporters
-      </h2>
+      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50 mb-4">Top Supporters</h2>
       <ul className="space-y-4 mb-4">
         {topContributors.map((contributor, index) => {
           const xlmAmount = stroopsToXlmNumber(contributor.totalAmount);
@@ -57,7 +55,10 @@ export default function ContributorLeaderboard({ campaignId }: ContributorLeader
                 <div className="w-8 h-8 rounded-full bg-linear-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40 flex items-center justify-center text-blue-700 dark:text-blue-300 text-xs font-bold border border-blue-200 dark:border-blue-800">
                   {index + 1}
                 </div>
-                <span className="text-sm font-mono text-zinc-700 dark:text-zinc-300" title={contributor.address}>
+                <span
+                  className="text-sm font-mono text-zinc-700 dark:text-zinc-300"
+                  title={contributor.address}
+                >
                   {truncateAddress(contributor.address)}
                 </span>
               </div>
@@ -69,7 +70,8 @@ export default function ContributorLeaderboard({ campaignId }: ContributorLeader
         })}
       </ul>
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-4 border-t border-zinc-100 dark:border-zinc-700 pt-4">
-        Contributions are recorded publicly on the Stellar ledger. If you prefer to remain anonymous, please use a fresh or unlinked wallet when donating.
+        Contributions are recorded publicly on the Stellar ledger. If you prefer to remain
+        anonymous, please use a fresh or unlinked wallet when donating.
       </p>
     </div>
   );

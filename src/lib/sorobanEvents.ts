@@ -56,19 +56,19 @@ const CONTRIBUTION_MADE_TOPIC = "contribution_made";
 
 /** Topic filter for `("contribution_made", campaign_id, *)` contract events. */
 export function contributionMadeTopicFilter(campaignId?: number): string[][] {
-  const eventSymbol = StellarSdk.nativeToScVal(CONTRIBUTION_MADE_TOPIC, { type: 'symbol' });
+  const eventSymbol = StellarSdk.nativeToScVal(CONTRIBUTION_MADE_TOPIC, { type: "symbol" });
   if (campaignId !== undefined) {
-    const campaignTopic = StellarSdk.nativeToScVal(campaignId, { type: 'u32' });
-    return [[scValToTopicSegment(eventSymbol), scValToTopicSegment(campaignTopic), '*']];
+    const campaignTopic = StellarSdk.nativeToScVal(campaignId, { type: "u32" });
+    return [[scValToTopicSegment(eventSymbol), scValToTopicSegment(campaignTopic), "*"]];
   }
-  return [[scValToTopicSegment(eventSymbol), '*', '*']];
+  return [[scValToTopicSegment(eventSymbol), "*", "*"]];
 }
 
 export function isContributionMadeEvent(event: ApiEventResponse, campaignId?: number): boolean {
   if (event.topic.length < 2) return false;
   const topicName = StellarSdk.scValToNative(event.topic[0]);
   if (topicName !== CONTRIBUTION_MADE_TOPIC) return false;
-  
+
   if (campaignId !== undefined) {
     const eventCampaignId = StellarSdk.scValToNative(event.topic[1]);
     return eventCampaignId === campaignId;
@@ -98,16 +98,16 @@ export function parseContributionAmount(event: ApiEventResponse): bigint {
 }
 
 export function parseContributorAddress(event: ApiEventResponse): string {
-  if (event.topic.length < 3) return '';
+  if (event.topic.length < 3) return "";
   try {
     const scVal = event.topic[2];
     // Attempt Address.fromScVal or scValToNative fallback
-    if (scVal.switch().name === 'scvAddress') {
+    if (scVal.switch().name === "scvAddress") {
       return StellarSdk.Address.fromScVal(scVal).toString();
     }
     return String(StellarSdk.scValToNative(scVal));
   } catch {
-    return '';
+    return "";
   }
 }
 

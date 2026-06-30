@@ -603,7 +603,7 @@ export default function CauseDetailClient({ id }: { id: string }) {
             </Link>
           </div>
         </div>
-        
+
         <RelatedCampaigns currentCampaignId={campaign.id} category={campaign.category} />
       </main>
 

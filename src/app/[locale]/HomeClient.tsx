@@ -62,7 +62,9 @@ export default function HomeClient() {
 
         {/* Features Section */}
         <section aria-labelledby="features-heading" className="mt-24 sm:mt-32">
-          <h2 id="features-heading" className="sr-only">Key features</h2>
+          <h2 id="features-heading" className="sr-only">
+            Key features
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <FeatureCard
               icon={<Globe className="text-blue-500" />}

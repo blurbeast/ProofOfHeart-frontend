@@ -41,11 +41,11 @@ export function useTrendingCampaigns(limit: number = 3): UseTrendingCampaignsRes
         if (!result || cancelled) return;
 
         const newVelocityMap = new Map<number, bigint>();
-        
+
         for (const event of result.events) {
           const campaignId = parseCampaignId(event);
           const amount = parseContributionAmount(event);
-          
+
           if (campaignId > 0 && amount > BigInt(0)) {
             const currentAmount = newVelocityMap.get(campaignId) || BigInt(0);
             newVelocityMap.set(campaignId, currentAmount + amount);
@@ -77,7 +77,7 @@ export function useTrendingCampaigns(limit: number = 3): UseTrendingCampaignsRes
     if (!campaigns || campaigns.length === 0) return [];
 
     // Filter to only active campaigns
-    const activeCampaigns = campaigns.filter(c => {
+    const activeCampaigns = campaigns.filter((c) => {
       const status = deriveCampaignStatus(c);
       return status === "active";
     });

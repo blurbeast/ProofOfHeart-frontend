@@ -199,20 +199,20 @@ export default function MyContributionsSection({ walletAddress }: MyContribution
   const handleExportCsv = () => {
     const header = ["Campaign", "Action", "Amount (XLM)", "Status", "Tx Hash", "Date"];
     const rows: string[] = [];
-    
+
     contributions.forEach((item) => {
       item.transactions.forEach((tx) => {
         let amountStr = "0";
         if (tx.action === "contribute" || tx.action === "claim_refund") {
           amountStr = (Number(item.contribution) / 10000000).toFixed(7);
         } else if (tx.action === "claim_revenue") {
-          amountStr = (Number(item.claimableRevenue) / 10000000).toFixed(7); 
+          amountStr = (Number(item.claimableRevenue) / 10000000).toFixed(7);
         }
 
         const date = new Date(tx.timestamp).toISOString();
         const status = getContributionDisplayStatus(item);
         const title = `"${item.campaign.title.replace(/"/g, '""')}"`;
-        
+
         rows.push([title, tx.action, amountStr, status, tx.txHash, date].join(","));
       });
     });

@@ -22,7 +22,7 @@ export interface UseCampaignContributorsResult {
 
 export function useCampaignContributors(
   campaignId: number,
-  limit: number = 5
+  limit: number = 5,
 ): UseCampaignContributorsResult {
   const [topContributors, setTopContributors] = useState<TopContributor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
