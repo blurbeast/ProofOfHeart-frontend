@@ -37,8 +37,7 @@ jobs:
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
-          NEXT_PUBLIC_USE_MOCKS: true
-          SKIP_MOCK_CHECK: true
+          NEXT_PUBLIC_USE_MOCKS: false
 
       - name: Run bundle-size check
         id: budget
